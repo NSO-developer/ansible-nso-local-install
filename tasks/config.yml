@@ -1,0 +1,11 @@
+---
+- name: config | NSO customer configuration
+  nso_config:
+    url: "https://{{ ansible_host }}:8888/jsonrpc"
+    username: "admin"
+    password: "admin"
+    validate_certs: false
+    data:
+      tailf-ncs:customers:
+        customer: "{{ nso_customer_config }}"
+  when: nso_customer_config is defined and nso_customer_config

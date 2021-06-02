@@ -1,0 +1,13 @@
+---
+- name: runtime | Create NSO {{ nso_version }} runtime
+  shell: "source {{ nso_install_dir }}/ncsrc && ncs-setup --dest {{ nso_runtime_dir }}"
+  args:
+    executable: /bin/bash
+    creates: "{{ nso_runtime_dir }}"
+
+- name: runtime | Create NSO {{ nso_version }} runtime configuration
+  template:
+    src: "local.ncs.conf.j2"
+    dest: "{{ nso_runtime_dir }}/ncs.conf"
+    mode: 0664
+  notify: "reload nso runtime config"

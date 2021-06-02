@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+# Local NSO NETSIM environment setup
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace # Uncomment for debugging
+
+# ---BEGIN VARIABLES---
+# loopback control
+loopback_var=0
+
+{% for netsim in nso_netsim %}
+# {{ netsim.type }}
+readonly {{ netsim.type }}_count={{ netsim.type_count }}
+readonly {{ netsim.type }}_count_gige={{ netsim.type_count_gige | default(0) }}
+readonly {{ netsim.type }}_count_tengige={{ netsim.type_count_tengige | default(0) }}
+{% if not loop.last %}
+
+{% endif %}
+{% endfor %}
+# ---END VARIABLES---
+
+# ---BEGIN CONTROL---
+# NSO source script
+ncsrc={{ nso_install_dir }}/ncsrc
+
+# NSO NETSIM directory
+netsimdir={{ nso_netsim_dir }}
+
+{% if cisco_ios_ned_package is defined %}
+# Cisco IOS NED
+cisco_ios_ned={{ cisco_ios_ned_package }}
+{% endif %}
+
+{% if cisco_iosxr_ned_package is defined %}
+# Cisco IOS-XR NED
+cisco_iosxr_ned={{ cisco_iosxr_ned_package }}
+{% endif %}
+# ---END CONTROL---
+
+# ---BEGIN SETUP---
+# Clean netsim directory first if its not empty
+if [[ "$(ls -A $netsimdir)" ]]; then
+    ncs-netsim --dir "${netsimdir}" delete-network > /dev/null
+fi
+
+# Clean existing device-groups
+echo "config; no devices device-group; commit" | ncs_cli -C -u admin
+
+# Clean existing devices
+echo "config; no devices device; commit" | ncs_cli -C -u admin
+
+# Remove existing configuration file
+rm -f netsim-env-config
+
+{% for netsim in nso_netsim %}
+{% if loop.first %}
+stage=create-network
+{% else %}
+stage=add-to-network
+{% endif %}
+{% if netsim.type == 'iosxr' and cisco_iosxr_ned_package %}
+# Cisco {{ netsim.type }} NETSIM's
+eval ncs-netsim --dir "${netsimdir}" "${stage}" "${cisco_iosxr_ned}" "${% raw %}{{% endraw %}{{ netsim.type }}_count}" {{ netsim.type }}- > /dev/null
+for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do
+    loopback_var=$(($loopback_var + 1))
+    echo "devices device-group {{ netsim.type }} device-name {{ netsim.type }}-$a" >> netsim-env-config
+    echo "devices device {{ netsim.type }}-$a config cisco-ios-xr:interface GigabitEthernet 1/1 ipv4 address 127.0.0.1 255.255.255.0" >> netsim-env-config
+    echo "devices device {{ netsim.type }}-$a config cisco-ios-xr:interface Loopback 0 ipv4 address 192.168.1.$loopback_var 255.255.255.255" >> netsim-env-config
+    for ((b = 0; b < ${% raw %}{{% endraw %}{{ netsim.type }}_count_gige}; b++)); do
+        echo "devices device {{ netsim.type }}-$a config cisco-ios-xr:interface GigabitEthernet 2/$b" >> netsim-env-config
+    done
+    for ((b = 0; b < ${% raw %}{{% endraw %}{{ netsim.type }}_count_tengige}; b++)); do
+        echo "devices device {{ netsim.type }}-$a config cisco-ios-xr:interface TenGigE 2/$b" >> netsim-env-config
+    done
+done
+{% endif %}
+{% if netsim.type == 'ios' and cisco_ios_ned_package %}
+# Cisco {{ netsim.type }} NETSIM's
+eval ncs-netsim --dir "${netsimdir}" "${stage}" "${cisco_ios_ned}" "${% raw %}{{% endraw %}{{ netsim.type }}_count}" {{ netsim.type }}- > /dev/null
+for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do
+    loopback_var=$(($loopback_var + 1))
+    echo "devices device-group {{ netsim.type }} device-name {{ netsim.type }}-$a" >> netsim-env-config
+    echo "devices device {{ netsim.type }}-$a config ios:interface GigabitEthernet 1/1 ip address 127.0.0.1 255.255.255.0" >> netsim-env-config
+    echo "no devices device {{ netsim.type }}-$a config ios:interface Loopback 0" >> netsim-env-config
+    echo "devices device {{ netsim.type }}-$a config ios:interface Loopback 0; ip address 192.168.1.$loopback_var 255.255.255.255" >> netsim-env-config
+    for ((b = 0; b < ${% raw %}{{% endraw %}{{ netsim.type }}_count_gige}; b++)); do
+        echo "devices device {{ netsim.type }}-$a config ios:interface GigabitEthernet 2/$b" >> netsim-env-config
+    done
+    for ((b = 0; b < ${% raw %}{{% endraw %}{{ netsim.type }}_count_tengige}; b++)); do
+        echo "devices device {{ netsim.type }}-$a config ios:interface TenGigabitEthernet 2/$b" >> netsim-env-config
+    done
+done
+{% endif %}
+{% if not loop.last %}
+
+{% endif %}
+{% endfor %}
+
+# Initialize XML file for netsim devices and copy configuration for loading later on
+eval ncs-netsim --dir "${netsimdir}" ncs-xml-init > "${netsimdir}"/devices.xml
+cp netsim-env-config "${netsimdir}"
+
+# Add netsim devices to NSO
+cd "${netsimdir}" && ncs_load -lm devices.xml > /dev/null
+
+# Starting netsim
+cd "${netsimdir}" && ncs-netsim -a start > /dev/null
+
+# Fetch device SSH host-keys
+echo "request devices fetch-ssh-host-keys" | ncs_cli -u admin
+
+# Connect to devices
+echo "request devices connect" | ncs_cli -u admin
+
+# Synchronize from devices
+echo "request devices sync-from" | ncs_cli -u admin
+
+# Load configuration
+cd "${netsimdir}" && echo "config; load merge netsim-env-config; commit" | ncs_cli -C -u admin
+# ---END SETUP---

@@ -1,0 +1,23 @@
+---
+# defaults file for ansible-nso-local-install
+nso_root_dir: "~/nso"
+
+nso_yang_files: []
+# nso_yang_files:
+#   - name: "ietf-routing-types.yang"
+#     uri: "https://raw.githubusercontent.com/YangModels/yang/master/standard/ietf/RFC/ietf-routing-types%402017-12-04.yang"
+
+nso_netsim: []
+# nso_netsim:
+#   - type: iosxr
+#     type_count: 3
+#     type_count_gige: 2
+#     type_count_tengige: 2
+#   - type: ios
+#     type_count: 3
+#     type_count_gige: 2
+#     type_count_tengige: 2
+
+nso_customer_config: []
+# nso_customer_config:
+#   - id: "Disneyland"

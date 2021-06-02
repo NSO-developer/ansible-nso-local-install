@@ -1,0 +1,21 @@
+---
+- name: install | Create NSO working directory
+  file:
+    path: "{{ nso_root_dir }}"
+    state: directory
+
+- name: install | Unpack NSO {{ nso_version }} signed binary
+  command: "sh {{ nso_signed_binary }}"
+  args:
+    chdir: "{{ role_path }}/files/nso"
+    creates: "{{ nso_install_binary }}"
+
+- name: install | Run NSO {{ nso_version }} Local installation
+  command: "sh {{ nso_install_binary }} --local-install {{ nso_install_dir }}"
+  args:
+    chdir: "{{ role_path }}/files/nso"
+    creates: "{{ nso_install_dir }}"
+
+- name: install | Install external YANG files
+  include: "yang-files.yml"
+  when: nso_yang_files is defined and nso_yang_files

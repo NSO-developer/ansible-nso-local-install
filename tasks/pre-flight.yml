@@ -1,0 +1,63 @@
+---
+- name: pre-flight | Search for Java binary
+  stat:
+    path: "{{ item }}"
+  register: java_binary
+  with_first_found: "{{ java_binary_search }}"
+
+- name: pre-flight | Assert that Java binary is executable
+  assert:
+    that:
+      - java_binary.results[0].stat.executable
+    fail_msg: "Whoops! Java binary is not executable"
+    quiet: true
+
+- name: pre-flight | Search for Ant binary
+  stat:
+    path: "{{ item }}"
+  register: ant_binary
+  with_first_found: "{{ ant_binary_search }}"
+
+- name: pre-flight | Assert that Ant binary is executable
+  assert:
+    that:
+      - ant_binary.results[0].stat.executable
+    fail_msg: "Whoops! Ant binary is not executable"
+    quiet: true
+
+- name: pre-flight | Assert that 'nso_root_dir' is set
+  assert:
+    that:
+      - "nso_root_dir is defined and nso_root_dir"
+    fail_msg: "Whoops! Mandatory variable 'nso_root_dir' is not set"
+    quiet: true
+
+- name: pre-flight | Search for NSO signed binary
+  find:
+    paths: "{{ role_path }}/files/nso"
+    patterns: "{{ nso_file_pattern }}"
+    use_regex: true
+  register: nso_files_dir
+
+- name: pre-flight | Assert that NSO signed binary is present
+  assert:
+    that:
+      - nso_files_dir.matched == 1
+    fail_msg: "Whoops! The '{{ role_path }}/files/nso' directory either does not contain a valid signed binary, or more than one signed binary exists. Please add a single, NSO signed binary to this folder"
+    quiet: true
+
+- name: pre-flight | Assign variable for NSO signed binary
+  set_fact:
+    nso_signed_binary: "{{ nso_files_dir.files[0].path | basename }}"
+
+- name: pre-flight | Search for NED signed binaries
+  find:
+    paths: "{{ role_path }}/files/neds"
+    patterns: "{{ ned_file_pattern }}"
+    use_regex: true
+  register: ned_files_dir
+
+- name: pre-flight | Assign variable for NED signed binaries
+  set_fact:
+    nso_ned_signed_binaries: "{{ nso_ned_signed_binaries | default([]) + [ item.path | basename ] }}"
+  loop: "{{ ned_files_dir.files }}"

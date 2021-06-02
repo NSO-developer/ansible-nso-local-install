@@ -1,0 +1,61 @@
+---
+# tasks file for ansible-nso-local-install
+- name: main | Gather variables for the operating system
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_distribution | lower }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  tags:
+    - "always"
+
+- name: main | Pre-flight
+  include: "pre-flight.yml"
+  tags:
+    - "always"
+
+- name: main | Install
+  include: "install.yml"
+  tags:
+    - "nso_install"
+    - "nso_runtime"
+
+- name: main | Runtime
+  include: "runtime.yml"
+  tags:
+    - "nso_runtime"
+
+- name: main | NED packages
+  include: "neds.yml"
+  when: nso_ned_signed_binaries is defined and nso_ned_signed_binaries
+  tags:
+    - "nso_neds"
+
+- name: main | Register NSO {{ nso_version }} status
+  shell: "source {{ nso_install_dir }}/ncsrc && ncs --status"
+  args:
+    executable: /bin/bash
+  register: ncs_status
+  ignore_errors: true
+  no_log: true
+  tags:
+    - "always"
+
+- name: main | Start NSO {{ nso_version }}
+  shell: "cd {{ nso_runtime_dir }} && source {{ nso_install_dir }}/ncsrc && ncs --with-package-reload"
+  args:
+    executable: /bin/bash
+  when: ncs_status.rc > 0
+  tags:
+    - "always"
+
+- name: main | Configuration
+  include: "config.yml"
+  tags:
+    - "nso_config"
+
+- name: main | NETSIM
+  include: "netsim.yml"
+  when: nso_netsim is defined and nso_netsim
+  tags:
+    - "nso_netsim"

@@ -1,0 +1,7 @@
+---
+# handlers file for ansible-nso-local-install
+- name: reload nso runtime config
+  shell: "cd {{ nso_runtime_dir }} && source {{ nso_install_dir }}/ncsrc && ncs --reload"
+  args:
+    executable: /bin/bash
+  # when: ncs_status.rc == 0

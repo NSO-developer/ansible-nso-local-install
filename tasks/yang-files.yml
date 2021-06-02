@@ -1,0 +1,25 @@
+---
+- name: yang-files | Create directory for external YANG files
+  file:
+    path: "{{ nso_yang_dir }}"
+    state: directory
+
+- name: yang-files | Download external YANG files
+  get_url:
+    url: "{{ item.uri }}"
+    dest: "{{ nso_yang_dir }}/{{ item.name }}"
+  loop: "{{ nso_yang_files }}"
+
+- name: yang-files | Symlink external YANG files
+  file:
+    src: "{{ nso_yang_dir }}/{{ item.name }}"
+    dest: "{{ nso_install_dir }}/src/ncs/yang/{{ item.name }}"
+    state: link
+  loop: "{{ nso_yang_files }}"
+
+- name: yang-files | Create fxs files from external YANG files
+  shell: "cd {{ nso_install_dir }}/etc/ncs && source {{ nso_install_dir }}/ncsrc && yanger -f fxs {{ nso_install_dir }}/src/ncs/yang/{{ item.name }}"
+  args:
+    executable: /bin/bash
+    creates: "{{ nso_install_dir }}/etc/ncs/{{ item.name | replace('.yang', '.fxs') }}"
+  loop: "{{ nso_yang_files }}"
