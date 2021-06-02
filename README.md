@@ -7,15 +7,15 @@ Ansible role for [Cisco Network Services Orchestrator](https://developer.cisco.c
 Automates the installation of Cisco NSO using the "Local" installation method, including:
 
 * Creation of NSO runtime environment
-  * Ability to customize the runtime configuration
-* Ability to include external YANG files
-* Ability to automatically build and load NED's
-* Ability to create, customize, and load NSO NETSIM's
-* Ability to configure NSO
+  * **(Optional)** Ability to customize the runtime configuration
+* **(Optional)** Ability to include external YANG files
+* **(Optional)** Ability to automatically build and load NED's
+* **(Optional)** Ability to create, customize, and load NSO NETSIM's
+* **(Optional)** Ability to configure NSO
 
-**[NOTE]** *The version of NSO that will be installed is based on the NSO binary noted in ```Prerequisites```*
+**[NOTE]** *The version of NSO that will be installed is based on the NSO binary noted in [Prerequisites](#prerequisites)*
 
-**[NOTE]** *The version(s) of NED(s) that will be installed is based on the NED binaries noted in ```Prerequisites```*
+**[NOTE]** *The version(s) of NED(s) that will be installed is based on the NED binaries noted in [Prerequisites](#prerequisites)*
 
 ### Role Restrictions
 
