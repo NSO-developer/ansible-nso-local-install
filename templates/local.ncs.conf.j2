@@ -30,6 +30,13 @@
 
   <state-dir>./state</state-dir>
 
+{% for group in nso_config_hide_group %}
+  <!-- Unhide {{ group.name }} -->
+  <hide-group>
+    <name>{{ group.name }}</name>
+  </hide-group>
+{% endfor %}
+
   <notifications>
     <event-streams>
 
@@ -264,51 +271,61 @@
     <algorithm>sha-512</algorithm>
   </crypt-hash>
 
+
+{% if nso_config_rollback is defined %}
   <!-- Disable this for performance critical applications, enabling -->
   <!-- rollbacks means additional disk IO for each transaction -->
   <rollback>
-    <enabled>true</enabled>
-    <directory>./logs</directory>
-    <history-size>500</history-size>
+    <enabled>{{ nso_config_rollback.enabled | default('true') | bool | lower }}</enabled>
+    <directory>{{ nso_config_rollback.directory | default('./logs') }}</directory>
+    <history-size>{{ nso_config_rollback.history_size | default('500') }}</history-size>
+    <rollback-numbering>{{ nso_config_rollback.rollback_numbering | default('fixed') }}</rollback-numbering>
   </rollback>
+{% endif %}
 
-
+{% if nso_config_cli is defined %}
   <cli>
-    <enabled>true</enabled>
+    <enabled>{{ nso_config_cli.enabled | default('true') | bool | lower }}</enabled>
+    <rollback-numbering>{{ nso_config_cli.rollback_numbering | default('fixed') }}</rollback-numbering>
 
     <!-- Use the builtin SSH server -->
     <ssh>
-      <enabled>true</enabled>
-      <ip>0.0.0.0</ip>
-      <port>2024</port>
+      <enabled>{{ nso_config_cli.ssh.enabled | default('true') | bool | lower }}</enabled>
+      <ip>{{ nso_config_cli.ssh.ip | default('0.0.0.0') }}</ip>
+      <port>{{ nso_config_cli.ssh.port | default('2024') }}</port>
     </ssh>
 
-    <prompt1>\u@ncs> </prompt1>
-    <prompt2>\u@ncs% </prompt2>
+    <prompt1>{{ nso_config_cli.prompt1 | default('\\u@ncs>') }} </prompt1>
+    <prompt2>{{ nso_config_cli.prompt2 | default('\\u@ncs%') }} </prompt2>
 
-    <c-prompt1>\u@ncs# </c-prompt1>
-    <c-prompt2>\u@ncs(\m)# </c-prompt2>
+    <c-prompt1>{{ nso_config_cli.cprompt1 | default('\\u@ncs#') }} </c-prompt1>
+    <c-prompt2>{{ nso_config_cli.cprompt1 | default('\\u@ncs(\m)#') }} </c-prompt2>
 
-    <show-commit-progress>true</show-commit-progress>
-    <suppress-commit-message-context>maapi</suppress-commit-message-context>
-    <suppress-commit-message-context>system</suppress-commit-message-context>
+    <show-commit-progress>{{ nso_config_cli.show_commit_progress | default('true') | bool | lower }}</show-commit-progress>
+    <suppress-commit-message-context>{{ nso_config_cli.suppress_commit_message_context1 | default('maapi') }}</suppress-commit-message-context>
+    <suppress-commit-message-context>{{ nso_config_cli.suppress_commit_message_context2 | default('system') }}</suppress-commit-message-context>
   </cli>
+{% endif %}
 
   <webui>
     <enabled>true</enabled>
     <transport>
+{% if nso_config_webui_tcp is defined %}
       <tcp>
-        <enabled>true</enabled>
-        <ip>0.0.0.0</ip>
-        <port>8080</port>
+        <enabled>{{ nso_config_webui_tcp.enabled | default('false') | bool | lower }}</enabled>
+        <ip>{{ nso_config_webui_tcp.ip | default('0.0.0.0') }}</ip>
+        <port>{{ nso_config_webui_tcp.port | default('8080') }}</port>
       </tcp>
+{% endif %}
+{% if nso_config_webui_ssl is defined %}
       <ssl>
-        <enabled>false</enabled>
-        <ip>0.0.0.0</ip>
-        <port>8888</port>
-        <key-file>${NCS_DIR}/var/ncs/webui/cert/host.key</key-file>
-        <cert-file>${NCS_DIR}/var/ncs/webui/cert/host.cert</cert-file>
+        <enabled>{{ nso_config_webui_ssl.enabled | default('false') | bool | lower }}</enabled>
+        <ip>{{ nso_config_webui_ssl.ip | default('0.0.0.0') }}</ip>
+        <port>{{ nso_config_webui_ssl.port | default('8888') }}</port>
+        <key-file>{{ nso_config_webui_ssl.key_file | default('${NCS_DIR}/var/ncs/webui/cert/host.key') }}</key-file>
+        <cert-file>{{ nso_config_webui_ssl.cert_file | default('${NCS_DIR}/var/ncs/webui/cert/host.cert') }}</cert-file>
       </ssl>
+{% endif %}
     </transport>
 
     <cgi>

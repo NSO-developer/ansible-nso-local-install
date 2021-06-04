@@ -24,19 +24,24 @@
   tags:
     - "always"
 
+- name: main | Flush handlers
+  meta: flush_handlers
+  tags:
+    - "always"
+
 - name: main | NED packages
   include: "neds.yml"
   when: nso_ned_signed_binaries is defined and nso_ned_signed_binaries
   tags:
     - "nso_neds"
 
-- name: main | Configuration
-  include: "config.yml"
-  tags:
-    - "nso_config"
-
-- name: main | NETSIM
+- name: main | NETSIM devices
   include: "netsim.yml"
   when: nso_netsim is defined and nso_netsim
   tags:
     - "nso_netsim"
+
+- name: main | Configuration
+  include: "config.yml"
+  tags:
+    - "nso_config"

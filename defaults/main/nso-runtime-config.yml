@@ -1,0 +1,15 @@
+---
+# /ncs-config/hide-group
+nso_config_hide_group: []
+
+# /ncs-config/rollback
+nso_config_rollback: {}
+
+# /ncs-config/cli
+nso_config_cli: {}
+
+# /ncs-config/webui/transport/tcp
+nso_config_webui_tcp: {}
+
+# /ncs-config/webui/transport/ssl
+nso_config_webui_ssl: {}

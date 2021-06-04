@@ -7,5 +7,5 @@
     validate_certs: false
     data:
       tailf-ncs:customers:
-        customer: "{{ nso_customer_config }}"
-  when: nso_customer_config is defined and nso_customer_config
+        customer: "{{ nso_customers }}"
+  when: nso_customers is defined and nso_customers

@@ -42,16 +42,18 @@ Automates the installation of Cisco NSO using the "Local" installation method, i
 
 ## Role Variables
 
-* All variables which can be overridden are stored in [defaults/main.yml](defaults/main.yml), highlighted in the table below
+All variables which can be overridden are stored in various files within [defaults/main](defaults/main)
 
+### Setup ([setup.yml](defaults/main/setup.yml))
 
-| Name           | Default | Description                        |
-| -------------- | ------------- | -----------------------------------|
+These variables are directly related to the setup of the NSO Local installation and NSO Runtime environment
+
+| Name | Default | Description |
+| ---- | ------- | ----------- |
 | `nso_root_dir` | "~/nso" | (String) Root path to directory where the NSO installation, runtime, External YANG files (Optional), and NETSIM (Optional) will reside. ```nso_install_dir```, ```nso_runtime_dir```, ```nso_yang_dir```, and ```nso_netsim_dir``` are all derived from this variable within [vars/main.yml](vars/main.yml). |
 | `nso_yang_files` | [] | (List) External YANG files (i.e.; those not included as part of NSO installation) to be installed |
-| `nso_netsim` | [] | (List) NETSIM environment and simulated devices to be installed. **NOTE: Each run of the playbook will wipe existing NETSIM environment** |
 
-### Sample Playbook
+## Sample Playbook
 
 Execute this role on 'localhost'
 
@@ -68,7 +70,7 @@ Execute this role on 'localhost'
         - "always"
 ```
 
-### Local Testing
+## Local Testing
 
 COMING SOON!
 
