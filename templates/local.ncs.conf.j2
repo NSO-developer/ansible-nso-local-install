@@ -312,7 +312,7 @@
     <transport>
 {% if nso_config_webui_tcp is defined %}
       <tcp>
-        <enabled>{{ nso_config_webui_tcp.enabled | default('false') | bool | lower }}</enabled>
+        <enabled>{{ nso_config_webui_tcp.enabled | default('true') | bool | lower }}</enabled>
         <ip>{{ nso_config_webui_tcp.ip | default('0.0.0.0') }}</ip>
         <port>{{ nso_config_webui_tcp.port | default('8080') }}</port>
       </tcp>

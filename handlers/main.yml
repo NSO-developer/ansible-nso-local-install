@@ -4,3 +4,8 @@
   shell: "cd {{ nso_runtime_dir }} && source {{ nso_install_dir }}/ncsrc && ncs --reload"
   args:
     executable: /bin/bash
+
+- name: reload nso packages
+  shell: "cd {{ nso_runtime_dir }} && source {{ nso_install_dir }}/ncsrc && echo 'request packages reload' | ncs_cli -u admin"
+  args:
+    executable: /bin/bash

@@ -1,2 +1,11 @@
 ---
 nso_netsim: []
+# nso_netsim:
+#   - type: iosxr
+#     type_count: 3
+#     type_count_gige: 2
+#     type_count_tengige: 2
+#   - type: ios
+#     type_count: 3
+#     type_count_gige: 2
+#     type_count_tengige: 2

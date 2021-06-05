@@ -30,8 +30,8 @@ Automates the installation of Cisco NSO using the "Local" installation method, i
 
 ### Prerequisites
 
-* Running this role
-  * Ansible >= 2.9
+* Ansible
+  * Ansible >= 2.9.1 (might work with earlier versions, but not tested)
 * NSO
   * Python 3
   * Operating System requirements as described on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/requirements) (Java + Ant)
@@ -42,7 +42,7 @@ Automates the installation of Cisco NSO using the "Local" installation method, i
 
 ## Role Variables
 
-All variables which can be overridden are stored in various files within [defaults/main](defaults/main)
+All variables which can be configured or overridden are stored in various files within [defaults/main](defaults/main)
 
 ### Setup ([setup.yml](defaults/main/setup.yml))
 
@@ -50,8 +50,44 @@ These variables are directly related to the setup of the NSO Local installation 
 
 | Name | Default | Description |
 | ---- | ------- | ----------- |
-| `nso_root_dir` | "~/nso" | (String) Root path to directory where the NSO installation, runtime, External YANG files (Optional), and NETSIM (Optional) will reside. ```nso_install_dir```, ```nso_runtime_dir```, ```nso_yang_dir```, and ```nso_netsim_dir``` are all derived from this variable within [vars/main.yml](vars/main.yml). |
-| `nso_yang_files` | [] | (List) External YANG files (i.e.; those not included as part of NSO installation) to be installed |
+| `nso_root_dir` | "~/nso" | Root path to directory where the NSO installation, runtime, external YANG files, and NETSIM will reside.<br /><br /> In other words, ```nso_install_dir```, ```nso_runtime_dir```, ```nso_yang_dir```, and ```nso_netsim_dir``` are all derived from this variable within [vars/main.yml](vars/main.yml). |
+| `nso_yang_files` | [] | External YANG files (i.e.; those not included as part of NSO installation) to be installed. Examples provided in the file. |
+
+### NETSIM ([netsim-vars.yml](defaults/main/netsim-vars.yml))
+
+These variables are directly related to the creation of various NETSIM devices
+
+| Name | Default | Description |
+| ---- | ------- | ----------- |
+| `nso_netsim` | [] | List of NETSIM devices to be created. Allows specifying the number of NETSIM devices per type, number of GigabitEthernet, and number of TenGigabitEthernet interfaces. |
+
+### Runtime Configuration ([nso-runtime-config.yml](defaults/main/nso-runtime-config.yml))
+
+These variables are directly related to the parameters used to construct the NSO runtime configuration, `ncs.conf`, abstracted from the various 'Configuration Parameters' found in the NSO Manual Pages.
+
+**Not all parameters may be present, but aim to be added over time.**
+
+**Individual examples and/or defaults are provided in the file**
+
+| Name | Default | Description |
+| ---- | ------- | ----------- |
+| `nso_config_hide_group` | [] | Corresponds to the `/ncs-config/hide-group` section. |
+| `nso_config_rollback` | {} | Corresponds to the `/ncs-config/rollback` section. |
+| `nso_config_cli` | {} | Corresponds to the `/ncs-config/cli` section. |
+| `nso_config_webui_tcp` | {} | Corresponds to the `/ncs-config/webui/transport/tcp` section. |
+| `nso_config_webui_ssl` | {} | Corresponds to the `/ncs-config/webui/transport/ssl` section. |
+
+### CDB Configuration ([nso-config.yml](defaults/main/nso-config.yml))
+
+These variables are directly related to various configuration to be applied to the NSO CDB using the Ansible `nso_config` module
+
+**Not all parameters may be present, but aim to be added over time.**
+
+**Individual examples and/or defaults are provided in the file**
+
+| Name | Default | Description |
+| ---- | ------- | ----------- |
+| `nso_customers` | [] | Corresponds to the `/ncs:customers/ncs:customer` configuration. |
 
 ## Sample Playbook
 
