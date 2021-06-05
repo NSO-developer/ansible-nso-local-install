@@ -30,13 +30,18 @@
   tags:
     - "nso_neds"
 
-- name: main | Configuration
-  include: "config.yml"
+- name: main | Flush handlers
+  meta: flush_handlers
   tags:
-    - "nso_config"
+    - "always"
 
-- name: main | NETSIM
+- name: main | NETSIM devices
   include: "netsim.yml"
   when: nso_netsim is defined and nso_netsim
   tags:
     - "nso_netsim"
+
+- name: main | Configuration
+  include: "config.yml"
+  tags:
+    - "nso_config"

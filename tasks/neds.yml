@@ -23,3 +23,4 @@
   args:
     executable: /bin/bash
   loop: "{{ nso_ned_dir.files }}"
+  notify: "reload nso packages" 

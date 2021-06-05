@@ -1,0 +1,7 @@
+---
+nso_root_dir: "~/nso"
+
+nso_yang_files: []
+# nso_yang_files:
+#   - name: "ietf-routing-types.yang"
+#     uri: "https://raw.githubusercontent.com/YangModels/yang/master/standard/ietf/RFC/ietf-routing-types%402017-12-04.yang"

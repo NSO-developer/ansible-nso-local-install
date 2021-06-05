@@ -1,0 +1,37 @@
+---
+# Affects template 'local.ncs.conf.j2' for NSO runtime configuration
+# Default values in 'local.ncs.conf.j2' are provided here for reference
+
+# /ncs-config/hide-group
+nso_config_hide_group: []
+# nso_config_hide_group:
+#   - name: debug
+
+# /ncs-config/rollback
+nso_config_rollback: {}
+# nso_config_rollback:
+#   enabled: true # default=true
+#   directory: ./logs # default=./logs
+#   history_size: 500 # default=500
+#   rollback_numbering: rolling # default=fixed
+
+# /ncs-config/cli
+nso_config_cli: {}
+# nso_config_cli:
+#   rollback_numbering: rolling # default=fixed
+
+# /ncs-config/webui/transport/tcp
+nso_config_webui_tcp: {}
+# nso_config_webui_tcp:
+#   enabled: true # default=true
+#   ip: 0.0.0.0 # default=0.0.0.0
+#   port: 8080 # default=8080
+
+# /ncs-config/webui/transport/ssl
+nso_config_webui_ssl: {}
+# nso_config_webui_ssl:
+#   enabled: true # default=false
+#   ip: 0.0.0.0 # default=0.0.0.0
+#   port: 8888 # default=8888
+#   key_file: # default=${NCS_DIR}/var/ncs/webui/cert/host.key
+#   cert_file: # default=${NCS_DIR}/var/ncs/webui/cert/host.cert
