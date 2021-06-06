@@ -1,7 +1,7 @@
 ---
 - name: config | NSO customer configuration
   nso_config:
-    url: "https://{{ ansible_host }}:8888/jsonrpc"
+    url: "http://{{ ansible_host }}:8080/jsonrpc"
     username: "admin"
     password: "admin"
     validate_certs: false

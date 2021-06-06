@@ -2,13 +2,13 @@
 - name: neds | Unpack NED signed binaries
   command: "sh {{ item }}"
   args:
-    chdir: "{{ role_path }}/files/neds"
+    chdir: "{{ bin_working_dir }}"
     creates: "{{ item | regex_search('(.+[^.signed.bin])', '\\1') | first }}.tar.gz"
   loop: "{{ nso_ned_signed_binaries }}"
 
 - name: neds | Unarchive NED packages into NSO {{ nso_version }} runtime
   unarchive:
-    src: "{{ role_path }}/files/neds/{{ item | regex_search('(.+[^.signed.bin])', '\\1') | first }}.tar.gz"
+    src: "{{ bin_working_dir }}/{{ item | regex_search('(.+[^.signed.bin])', '\\1') | first }}.tar.gz"
     dest: "{{ nso_runtime_dir }}/packages"
   loop: "{{ nso_ned_signed_binaries }}"
 
@@ -23,4 +23,4 @@
   args:
     executable: /bin/bash
   loop: "{{ nso_ned_dir.files }}"
-  notify: "reload nso packages" 
+  notify: "reload nso packages"

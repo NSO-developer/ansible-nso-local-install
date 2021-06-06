@@ -45,3 +45,8 @@
   include: "config.yml"
   tags:
     - "nso_config"
+
+- name: main | Cleanup
+  include: "cleanup.yml"
+  tags:
+    - "always"

@@ -1,0 +1,30 @@
+---
+- name: cleanup | Remove NSO working files
+  file:
+    path: "{{ bin_working_dir }}/{{ item }}"
+    state: absent
+  loop:
+    - "{{ nso_install_binary }}"
+    - "{{ nso_install_binary }}.signature"
+
+- name: cleanup | Remove NED working archive files
+  file:
+    path: "{{ bin_working_dir }}/{{ item | regex_search('(.+[^.signed.bin])', '\\1') | first }}.tar.gz"
+    state: absent
+  loop: "{{ nso_ned_signed_binaries }}"
+
+- name: cleanup | Remove NED working archive signature files
+  file:
+    path: "{{ bin_working_dir }}/{{ item | regex_search('(.+[^.signed.bin])', '\\1') | first }}.tar.gz.signature"
+    state: absent
+  loop: "{{ nso_ned_signed_binaries }}"
+
+- name: cleanup | Remove misc working files
+  file:
+    path: "{{ bin_working_dir }}/{{ item }}"
+    state: absent
+  loop:
+    - "cisco_x509_verify_release.py"
+    - "cisco_x509_verify_release.py3"
+    - "README.signature"
+    - "tailf.cer"

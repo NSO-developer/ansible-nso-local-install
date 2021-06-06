@@ -1,0 +1,5 @@
+---
+nso_file_pattern: "(nso-\\b).*(linux\\b).*(.signed.bin\\b)"
+ned_file_pattern: "(ncs-\\b).*(.signed.bin\\b)"
+java_binary: "/usr/bin/java"
+ant_binary: "/usr/bin/ant"

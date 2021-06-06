@@ -1,6 +1,4 @@
 *.retry
 *.log
-files/nso/*
-files/neds/*
-!files/nso/.gitkeep
-!files/neds/.gitkeep
+files/*
+!files/.gitkeep

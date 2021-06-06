@@ -4,16 +4,22 @@
     path: "{{ nso_root_dir }}"
     state: directory
 
+- name: install | Copy NSO {{ nso_version }} signed binary to remote host
+  copy:
+    src: "{{ nso_signed_binary }}"
+    dest: "{{ bin_working_dir }}"
+  when: ansible_host != "localhost"
+
 - name: install | Unpack NSO {{ nso_version }} signed binary
   command: "sh {{ nso_signed_binary }}"
   args:
-    chdir: "{{ role_path }}/files/nso"
+    chdir: "{{ bin_working_dir }}"
     creates: "{{ nso_install_binary }}"
 
 - name: install | Run NSO {{ nso_version }} Local installation
   command: "sh {{ nso_install_binary }} --local-install {{ nso_install_dir }}"
   args:
-    chdir: "{{ role_path }}/files/nso"
+    chdir: "{{ bin_working_dir }}"
     creates: "{{ nso_install_dir }}"
 
 - name: install | Install external YANG files

@@ -1,32 +1,24 @@
 # Ansible Role: NSO Local Installation
 
-Ansible role for [Cisco Network Services Orchestrator](https://developer.cisco.com/docs/nso/#!nso-fundamentals) (NSO) [Local](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/local-vs-system-installation) installation
+Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.com/docs/nso/#!nso-fundamentals) (NSO) [Local](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/local-vs-system-installation) installation
 
 ## Overview
 
-Automates the installation of Cisco NSO using the "Local" installation method, including:
-
-* Creation of NSO runtime environment
+* Runs NSO "Local" installation
+* Creates NSO runtime environment
   * **(Optional)** Ability to customize the runtime configuration
 * **(Optional)** Ability to include external YANG files
 * **(Optional)** Ability to automatically build and load NED's
 * **(Optional)** Ability to create, customize, and load NSO NETSIM's
 * **(Optional)** Ability to configure NSO
 
-**[NOTE]** *The version of NSO that will be installed is based on the NSO binary noted in [Prerequisites](#prerequisites)*
-
-**[NOTE]** *The version(s) of NED(s) that will be installed is based on the NED binaries noted in [Prerequisites](#prerequisites)*
-
 ### Role Restrictions
 
 * The use of this role is supported on the following target hosts:
   * macOS (Darwin)
-* The use of this role assumes the ability to obtain the appropriate NSO and NED binaries
-  * Evaluation copies for NSO & various NSO NED's can be found on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/download-your-nso-free-trial-installer-and-cisco-neds)
-
-### Validated NSO Versions
-
-* 5.5
+  * Linux (Debian)
+* The use of this role assumes the ability to obtain the appropriate NSO and NED signed binaries as noted in [Prerequisites](#prerequisites)
+  * Evaluation copies for NSO & NSO NED's can be found on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/download-your-nso-free-trial-installer-and-cisco-neds)
 
 ### Prerequisites
 
@@ -35,18 +27,23 @@ Automates the installation of Cisco NSO using the "Local" installation method, i
 * NSO
   * Python 3
   * Operating System requirements as described on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/requirements) (Java + Ant)
-  * NSO Signed Binary
-    * The NSO signed binary (*.signed.bin) must be placed within the (```files/nso```) folder
-  * NSO NED Signed Binaries
-      * The NED signed binaries (*.signed.bin) must be placed within the (```files/neds```) folder
+    * **NOTE: If Java or Ant binaries are installed in a location other than the default, you can change the respective ```java_binary``` or ```ant_binary``` variables in the respective file under [vars](vars)**
+  * Signed Binary (*.signed.bin)
+    * The NSO signed binary must be placed within the (```files```) folder
+  * NED Signed Binaries (*.signed.bin)
+      * The NED signed binaries must be placed within the (```files```) folder
+
+### Validated NSO Versions
+
+* 5.5
 
 ## Role Variables
 
-All variables which can be configured or overridden are stored in various files within [defaults/main](defaults/main)
+All variables which can be overridden are stored in various files within [defaults/main](defaults/main)
 
 ### Setup ([setup.yml](defaults/main/setup.yml))
 
-These variables are directly related to the setup of the NSO Local installation and NSO Runtime environment
+These variables are directly related to the core setup of the _NSO Local installation_ and _NSO Runtime_ environment
 
 | Name | Default | Description |
 | ---- | ------- | ----------- |
@@ -84,6 +81,8 @@ These variables are directly related to various configuration to be applied to t
 **Not all parameters may be present, but aim to be added over time.**
 
 **Individual examples and/or defaults are provided in the file**
+
+**Uses TCP transport port (8080) as it is enabled by default in runtime**
 
 | Name | Default | Description |
 | ---- | ------- | ----------- |
