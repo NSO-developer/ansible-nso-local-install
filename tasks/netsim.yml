@@ -1,5 +1,5 @@
 ---
-- name: netsim | Assert that user defined NETSIM types are supported
+- name: netsim | Assert that defined NETSIM types are supported
   assert:
     that:
       - item.type == 'iosxr' or item.type == 'ios'
