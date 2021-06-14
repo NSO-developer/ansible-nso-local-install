@@ -1,4 +1,11 @@
 ---
+- name: neds | Copy NED signed binaries to remote host
+  copy:
+    src: "{{ item }}"
+    dest: "{{ bin_working_dir }}"
+  loop: "{{ nso_ned_signed_binaries }}"
+  when: ansible_host != "localhost"
+
 - name: neds | Unpack NED signed binaries
   command: "sh {{ item }}"
   args:
@@ -11,6 +18,15 @@
     src: "{{ bin_working_dir }}/{{ item | regex_search('(.+[^.signed.bin])', '\\1') | first }}.tar.gz"
     dest: "{{ nso_runtime_dir }}/packages"
   loop: "{{ nso_ned_signed_binaries }}"
+  when: ansible_host == "localhost"
+
+- name: neds | Unarchive NED packages into NSO {{ nso_version }} runtime on remote host
+  unarchive:
+    src: "{{ bin_working_dir }}/{{ item | regex_search('(.+[^.signed.bin])', '\\1') | first }}.tar.gz"
+    dest: "{{ nso_runtime_dir }}/packages"
+    remote_src: true
+  loop: "{{ nso_ned_signed_binaries }}"
+  when: ansible_host != "localhost"
 
 - name: neds | Register NED packages from NSO {{ nso_version }} runtime
   find:

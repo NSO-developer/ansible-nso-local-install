@@ -4,13 +4,13 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 
 ## Overview
 
-* Runs NSO "Local" installation
-* Creates NSO runtime environment
-  * **(Optional)** Ability to customize the runtime configuration
-* **(Optional)** Ability to include external YANG files
-* **(Optional)** Ability to automatically build and load NED's
-* **(Optional)** Ability to create, customize, and load NSO NETSIM's
-* **(Optional)** Ability to configure NSO
+* Execute NSO "Local" installation
+  *  **(Optional)** Include external YANG files
+* Create NSO runtime environment
+  * **(Optional)** Customize the runtime configuration
+  * **(Optional)** Automatically build and load NED's
+  * **(Optional)** Create, customize, and load NSO NETSIM's
+  * **(Optional)** Configure NSO CDB
 
 ### Role Restrictions
 
@@ -27,7 +27,8 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 * NSO
   * Python 3
   * Operating System requirements as described on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/requirements) (Java + Ant)
-    * **NOTE: If Java or Ant binaries are installed in a location other than the default, you can change the respective ```java_binary``` or ```ant_binary``` variables in the respective file under [vars](vars)**
+    * **NOTE: If ```Java``` or ```Ant``` binaries are installed in a location other than the default, you can change the respective ```java_binary``` or ```ant_binary``` variables in the respective file under [vars](vars)**
+    * **NOTE: Assumes the target host has ```build-essentials (gcc, make, etc.)``` and ```xsltproc``` installed**
   * Signed Binary (*.signed.bin)
     * The NSO signed binary must be placed within the (```files```) folder
   * NED Signed Binaries (*.signed.bin)

@@ -8,4 +8,5 @@
     data:
       tailf-ncs:customers:
         customer: "{{ nso_customers }}"
+  delegate_to: localhost
   when: nso_customers is defined and nso_customers
