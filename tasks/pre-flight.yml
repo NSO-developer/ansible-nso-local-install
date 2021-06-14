@@ -23,7 +23,7 @@
     fail_msg: "Whoops! Ant binary is not executable"
     quiet: true
 
-- name: pre-flight | Search for NSO signed binary
+- name: pre-flight | Search for local NSO signed binary in 'files'
   find:
     paths: "{{ role_path }}/files"
     patterns: "{{ nso_file_pattern }}"
@@ -35,7 +35,7 @@
   set_fact:
     nso_signed_binary: "{{ nso_files_dir.files[0].path | basename }}"
 
-- name: pre-flight | Search for NED signed binaries
+- name: pre-flight | Search for local NED signed binaries in 'files'
   find:
     paths: "{{ role_path }}/files"
     patterns: "{{ ned_file_pattern }}"
@@ -47,13 +47,3 @@
   set_fact:
     nso_ned_signed_binaries: "{{ nso_ned_signed_binaries | default([]) + [ item.path | basename ] }}"
   loop: "{{ ned_files_dir.files }}"
-
-- name: pre-flight | Assign binary working directory for localhost
-  set_fact:
-    bin_working_dir: "{{ role_path }}/files"
-  when: ansible_host == "localhost"
-
-- name: pre-flight | Assign binary working directory for remote hosts
-  set_fact:
-    bin_working_dir: "/tmp"
-  when: ansible_host != "localhost"

@@ -10,6 +10,11 @@ galaxy_info:
         - Sierra
         - High-Sierra
         - Big-Sur
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+        - bullseye
   galaxy_tags:
     - nso
     - networking
