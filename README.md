@@ -4,7 +4,7 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 
 ## Overview
 
-* Execute NSO "Local" installation
+* Execute NSO Local installation
   *  **(Optional)** Include external YANG files
 * Create NSO runtime environment
   * **(Optional)** Customize the runtime configuration
@@ -17,8 +17,8 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 * The use of this role is supported on the following target hosts:
   * macOS (Darwin)
   * Linux (Debian)
-* The use of this role assumes the ability to obtain the appropriate NSO and NED signed binaries as noted in [Prerequisites](#prerequisites)
-  * Evaluation copies for NSO & NSO NED's can be found on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/download-your-nso-free-trial-installer-and-cisco-neds)
+* The use of this role assumes the user can obtain the appropriate binaries as noted in [Prerequisites](#prerequisites)
+  * Evaluation copies for NSO & various NSO NED's can be found on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/download-your-nso-free-trial-installer-and-cisco-neds)
 
 ### Prerequisites
 
@@ -27,12 +27,12 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 * NSO
   * Python 3
   * Operating System requirements as described on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/requirements) (Java + Ant)
-    * **NOTE: If ```Java``` or ```Ant``` binaries are installed in a location other than the default, you can change the respective ```java_binary``` or ```ant_binary``` variables in the respective file under [vars](vars)**
-    * **NOTE: Assumes the target host has ```build-essentials (gcc, make, etc.)``` and ```xsltproc``` installed**
-  * Signed Binary (*.signed.bin)
-    * The NSO signed binary must be placed within the (```files```) folder
+    * **NOTE:** If ```Java``` or ```Ant``` binaries are installed in a location other than the default, you can change the respective ```java_binary``` or ```ant_binary``` variables in [vars](vars)
+    * **NOTE:** Assumes the target host has ```build-essentials``` (gcc, make, etc.) and ```xsltproc``` installed
+  * NSO Signed Binary (*.signed.bin)
+    * The NSO signed binary **must** be placed within the (```files```) folder
   * NED Signed Binaries (*.signed.bin)
-      * The NED signed binaries must be placed within the (```files```) folder
+      * The NED signed binaries **must** be placed within the (```files```) folder
 
 ### Validated NSO Versions
 
@@ -44,7 +44,7 @@ All variables which can be overridden are stored in various files within [defaul
 
 ### Setup ([setup.yml](defaults/main/setup.yml))
 
-These variables are directly related to the core setup of the _NSO Local installation_ and _NSO Runtime_ environment
+These variables are directly related to running the _NSO Local installation_ and _NSO Runtime_ environment
 
 | Name | Default | Description |
 | ---- | ------- | ----------- |
@@ -53,7 +53,7 @@ These variables are directly related to the core setup of the _NSO Local install
 
 ### NETSIM ([netsim-vars.yml](defaults/main/netsim-vars.yml))
 
-These variables are directly related to the creation of various NETSIM devices
+These variables are directly related to the creation of NETSIM devices
 
 | Name | Default | Description |
 | ---- | ------- | ----------- |
@@ -62,10 +62,6 @@ These variables are directly related to the creation of various NETSIM devices
 ### Runtime Configuration ([nso-runtime-config.yml](defaults/main/nso-runtime-config.yml))
 
 These variables are directly related to the parameters used to construct the NSO runtime configuration, `ncs.conf`, abstracted from the various 'Configuration Parameters' found in the NSO Manual Pages.
-
-**Not all parameters may be present, but aim to be added over time.**
-
-**Individual examples and/or defaults are provided in the file**
 
 | Name | Default | Description |
 | ---- | ------- | ----------- |
@@ -77,21 +73,13 @@ These variables are directly related to the parameters used to construct the NSO
 
 ### CDB Configuration ([nso-config.yml](defaults/main/nso-config.yml))
 
-These variables are directly related to various configuration to be applied to the NSO CDB using the Ansible `nso_config` module
-
-**Not all parameters may be present, but aim to be added over time.**
-
-**Individual examples and/or defaults are provided in the file**
-
-**Uses TCP transport port (8080) as it is enabled by default in runtime**
+These variables are directly related to configuration than can be applied to the NSO CDB
 
 | Name | Default | Description |
 | ---- | ------- | ----------- |
 | `nso_customers` | [] | Corresponds to the `/ncs:customers/ncs:customer` configuration. |
 
 ## Sample Playbook
-
-Execute this role on 'localhost'
 
 ```yaml
 ---
@@ -101,7 +89,7 @@ Execute this role on 'localhost'
   tasks:
     - name: Setup NSO
       include_role:
-        name: ansible-nso-local-install
+        name: dbono711.ansible_nso_local_install
       tags:
         - "always"
 ```
