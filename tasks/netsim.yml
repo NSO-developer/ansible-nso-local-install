@@ -45,6 +45,7 @@
   file:
     path: "{{ nso_netsim_dir }}"
     state: directory
+    mode: '0755'
 
 - name: netsim | Create NETSIM setup script
   template:

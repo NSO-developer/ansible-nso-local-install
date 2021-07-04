@@ -1,23 +1,20 @@
+---
 galaxy_info:
+  role_name: nso-local-install
   author: Darren Bono
-  description: Ansible role for Cisco Network Services Orchestrator (NSO) Local installation
-  company: None
+  description: Cisco Network Services Orchestrator (NSO) local installation
   license: MIT
-  min_ansible_version: 2.9.1
+  min_ansible_version: 2.9
   platforms:
-    - name: macOS
-      versions:
-        - Sierra
-        - High-Sierra
-        - Big-Sur
     - name: Debian
       versions:
         - stretch
         - buster
-        - bullseye
+    - name: macOS
+      versions:
+        - Big-Sur
   galaxy_tags:
     - nso
     - networking
     - automation
     - orchestration
-dependencies: []

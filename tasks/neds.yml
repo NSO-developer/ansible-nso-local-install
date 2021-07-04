@@ -3,11 +3,12 @@
   copy:
     src: "{{ item }}"
     dest: "{{ bin_working_dir }}"
+    mode: '0755'
   loop: "{{ nso_ned_signed_binaries }}"
   when: ansible_host != "localhost"
 
 - name: neds | Unpack NED signed binaries
-  command: "sh {{ item }}"
+  command: "sh {{ item }} --skip-verification"
   args:
     chdir: "{{ bin_working_dir }}"
     creates: "{{ item | regex_search('(.+[^.signed.bin])', '\\1') | first }}.tar.gz"

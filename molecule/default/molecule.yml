@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: debian-stretch
+    image: debian:stretch
+  - name: debian-buster
+    image: debian:buster
+    groups:
+      - python3
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+      callback_enabled: profile_tasks, timer, yaml
+    ssh_connection:
+      pipelining: false
+  inventory:
+    group_vars:
+      python3:
+        ansible_python_interpreter: /usr/bin/python3
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+verifier:
+  name: ansible

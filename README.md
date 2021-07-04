@@ -13,10 +13,7 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
   * **(Optional)** Configure NSO CDB
 
 ### Role Restrictions
-
-* The use of this role is supported on the following target hosts:
-  * macOS (Darwin)
-  * Linux (Debian)
+ 
 * The use of this role assumes the user can obtain the appropriate binaries as noted in [Prerequisites](#prerequisites)
   * Evaluation copies for NSO & various NSO NED's can be found on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/download-your-nso-free-trial-installer-and-cisco-neds)
 

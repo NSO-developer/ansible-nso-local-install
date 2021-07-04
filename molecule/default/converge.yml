@@ -1,0 +1,29 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Install packages
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+      loop:
+        - build-essential
+        - openssh-server
+        - python3
+        - python3-dev
+        - xsltproc
+        - default-jdk
+        - ant
+      when: "ansible_os_family == 'Debian'"
+    - name: Ensure correct python version is selected
+      alternatives:
+        name: python
+        link: /usr/bin/python
+        path: /usr/bin/python3
+    - name: Include test variables
+      include_vars: testvars.yml
+    - name: Include ansible-nso-local-install
+      include_role:
+        name: ansible-nso-local-install

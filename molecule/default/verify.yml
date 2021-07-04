@@ -1,0 +1,33 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Gather package facts
+    package_facts:
+      manager: auto
+
+  - name: Include test variables
+    include_vars: testvars.yml
+
+  - name: Search for NSO source script
+    find:
+      paths: "{{ nso_root_dir }}"
+      patterns: "^ncsrc$"
+      use_regex: true
+      recurse: true
+    register: nso_source_script
+
+  - name: Assert that NSO source script is found
+    assert:
+      that: nso_source_script.matched == 1
+
+  - name: Register NSO status
+    shell: "source {{ nso_source_script.files[0].path }} && ncs --status"
+    args:
+      executable: /bin/bash
+    register: ncs_status
+    ignore_errors: true
+
+  - name: Assert NSO status
+    assert:
+      that: ncs_status.rc == 0
