@@ -1,6 +1,5 @@
 ---
 galaxy_info:
-  role_name: nso-local-install
   author: Darren Bono
   description: Cisco Network Services Orchestrator (NSO) local installation
   license: MIT
