@@ -337,7 +337,7 @@
   </webui>
 
   <restconf>
-    <enabled>true</enabled>
+    <enabled>{{ nso_config_restconf.enabled | default('true') | bool | lower }}</enabled>
   </restconf>
 
   <netconf-north-bound>
