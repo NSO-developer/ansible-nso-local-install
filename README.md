@@ -13,7 +13,7 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
   * **(Optional)** Configure NSO CDB
 
 ### Role Restrictions
- 
+
 * The use of this role assumes the user can obtain the appropriate binaries as noted in [Prerequisites](#prerequisites)
   * Evaluation copies for NSO & various NSO NED's can be found on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/download-your-nso-free-trial-installer-and-cisco-neds)
 
@@ -67,6 +67,7 @@ These variables are directly related to the parameters used to construct the NSO
 | `nso_config_cli` | {} | Corresponds to the `/ncs-config/cli` section. |
 | `nso_config_webui_tcp` | {} | Corresponds to the `/ncs-config/webui/transport/tcp` section. |
 | `nso_config_webui_ssl` | {} | Corresponds to the `/ncs-config/webui/transport/ssl` section. |
+| `nso_config_restconf` | {} | Corresponds to the `/ncs-config/restconf` section. |
 
 ### CDB Configuration ([nso-config.yml](defaults/main/nso-config.yml))
 
@@ -83,6 +84,34 @@ These variables are directly related to configuration than can be applied to the
 - name: NSO Local Installation
   hosts: all
   gather_facts: yes
+  vars:
+    nso_root_dir: "~/nso"
+    nso_yang_files:
+      - name: "ietf-routing-types.yang"
+        uri: "https://raw.githubusercontent.com/YangModels/yang/master/standard/ietf/RFC/ietf-routing-types%402017-12-04.yang"
+    nso_netsim:
+      - type: iosxr
+        type_count: 3
+        type_count_gige: 2
+        type_count_tengige: 2
+    nso_config_hide_group:
+      - name: debug
+    nso_config_rollback:
+      enabled: true
+      directory: ./logs
+      history_size: 500
+      rollback_numbering: rolling
+    nso_config_cli:
+      rollback_numbering: rolling
+    nso_config_webui_ssl:
+      enabled: true
+      ip: 0.0.0.0
+      port: 8888
+      key_file: ${NCS_DIR}/var/ncs/webui/cert/host.key
+      cert_file: ${NCS_DIR}/var/ncs/webui/cert/host.cert
+    nso_customers:
+      - id: Disneyland
+      - id: Universal
   tasks:
     - name: Setup NSO
       include_role:

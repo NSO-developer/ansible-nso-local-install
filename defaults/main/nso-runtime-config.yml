@@ -20,6 +20,11 @@ nso_config_cli: {}
 # nso_config_cli:
 #   rollback_numbering: rolling # default=fixed
 
+# /ncs-config/restconf
+nso_config_restconf: {}
+# nso_config_restconf:
+#   enabled: true # default=true
+
 # /ncs-config/webui/transport/tcp
 nso_config_webui_tcp: {}
 # nso_config_webui_tcp:
