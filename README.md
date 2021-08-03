@@ -5,14 +5,14 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 ## Overview
 
 * Execute NSO Local installation
-  *  **(Optional)** Include external YANG files
+  *  Include external YANG files
 * Create NSO runtime environment
-  * **(Optional)** Customize the runtime configuration
-  * **(Optional)** Automatically build and load NED's
-  * **(Optional)** Create, customize, and load NSO NETSIM's
-  * **(Optional)** Configure NSO CDB
+  * Customize the runtime configuration
+  * Automatically build and load NED's
+  * Create, customize, and load NSO NETSIM's
+  * Configure NSO CDB
 
-### Role Restrictions
+### Restrictions
 
 * The use of this role assumes the user can obtain the appropriate binaries as noted in [Prerequisites](#prerequisites)
   * Evaluation copies for NSO & various NSO NED's can be found on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/download-your-nso-free-trial-installer-and-cisco-neds)
@@ -122,7 +122,9 @@ These variables are directly related to configuration than can be applied to the
 
 ## Local Testing
 
-COMING SOON!
+Testing is accomplished with Molecule. After [installing](https://molecule.readthedocs.io/en/latest/installation.html) Molecule in your local environment, you can execute the complete test suite via:
+
+```molecule test```
 
 ## Additional Resources
 
