@@ -1,24 +1,15 @@
 <!-- -*- nxml -*- -->
-<!-- Example configuration file for ncs. -->
 
 <ncs-config xmlns="http://tail-f.com/yang/tailf-ncs-config">
-
-  <!-- NCS can be configured to restrict access for incoming connections -->
-  <!-- to the IPC listener sockets. The access check requires that -->
-  <!-- connecting clients prove possession of a shared secret. -->
   <ncs-ipc-access-check>
     <enabled>false</enabled>
     <filename>${NCS_DIR}/etc/ncs/ipc_access</filename>
   </ncs-ipc-access-check>
 
   <!-- Where to look for .fxs and snmp .bin files to load -->
-
   <load-path>
     <dir>./packages</dir>
     <dir>${NCS_DIR}/etc/ncs</dir>
-
-    <!-- To disable northbound snmp altogether -->
-    <!-- comment out the path below -->
     <dir>${NCS_DIR}/etc/ncs/snmp</dir>
   </load-path>
 
@@ -31,7 +22,6 @@
   <state-dir>./state</state-dir>
 
 {% for group in nso_config_hide_group %}
-  <!-- Unhide {{ group.name }} -->
   <hide-group>
     <name>{{ group.name }}</name>
   </hide-group>
@@ -39,12 +29,6 @@
 
   <notifications>
     <event-streams>
-
-      <!-- This is the builtin stream used by NCS to generate northbound -->
-      <!-- notifications whenever the alarm table is changed. -->
-      <!-- See tailf-ncs-alarms.yang -->
-      <!-- If you are not interested in NCS northbound netconf notifications -->
-      <!-- remove this item since it does consume some CPU -->
       <stream>
         <name>ncs-alarms</name>
         <description>NCS alarms according to tailf-ncs-alarms.yang</description>
@@ -56,11 +40,6 @@
           <max-files>50</max-files>
         </builtin-replay-store>
       </stream>
-
-      <!-- This is the builtin stream used by NCS to generate northbound -->
-      <!-- notifications for internal events. -->
-      <!-- See tailf-ncs-devices.yang -->
-      <!-- Required for cluster mode. -->
       <stream>
         <name>ncs-events</name>
         <description>NCS event according to tailf-ncs-devices.yang</description>
@@ -72,11 +51,6 @@
           <max-files>50</max-files>
         </builtin-replay-store>
       </stream>
-
-      <!-- This is the builtin stream used by NCS to generate northbound -->
-      <!-- notifications for kicker event stream. -->
-      <!-- See tailf-kicker.yang -->
-      <!-- Required for cluster mode. -->
       <stream>
         <name>kicker-events</name>
         <description>NCS event according to tailf-kicker.yang</description>
@@ -88,10 +62,6 @@
           <max-files>50</max-files>
         </builtin-replay-store>
       </stream>
-
-      <!-- This is the builtin stream used by NCS to generate northbound -->
-      <!-- notifications forwarded from devices. -->
-      <!-- See tailf-event-forwarding.yang -->
       <stream>
         <name>device-notifications</name>
         <description>NCS events forwarded from devices</description>
@@ -103,10 +73,6 @@
           <max-files>50</max-files>
         </builtin-replay-store>
       </stream>
-
-      <!-- This is the builtin stream used by NCS to generate northbound -->
-      <!-- notifications for plan state transitions. -->
-      <!-- See tailf-ncs-plan.yang -->
       <stream>
         <name>service-state-changes</name>
         <description>Plan state transitions according to
@@ -125,20 +91,11 @@
   <!-- Where the database (and init XML) files are kept -->
   <cdb>
     <db-dir>./ncs-cdb</db-dir>
-    <!-- Always bring in the good system defaults -->
     <init-path>
       <dir>${NCS_DIR}/var/ncs/cdb</dir>
     </init-path>
   </cdb>
 
-
-  <!--
-      These keys are used to encrypt values of the types
-      tailf:des3-cbc-encrypted-string, tailf:aes-cfb-128-encrypted-string
-      and tailf:aes-256-cfb-128-encrypted-string.
-      For a deployment install it is highly recommended to change
-      these numbers to something random (done by NCS "system install")
-  -->
   <encrypted-strings>
     <DES3CBC>
       <key1>0123456789abcdef</key1>
@@ -156,7 +113,6 @@
       <key>0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef</key>
     </AES256CFB128>
   </encrypted-strings>
-
 
   <logs>
     <trace-id>false</trace-id>
@@ -222,12 +178,6 @@
       <dir>./logs</dir>
     </webui-access-log>
 
-
-    <!-- This log is disabled by default if ncs is installed using -->
-    <!-- the 'system-install' flag. It consumes a lot of CPU power -->
-    <!-- to have this log turned on, OTOH it is the best tool to -->
-    <!-- debug must expressions in YANG models -->
-
     <xpath-trace-log>
       <enabled>true</enabled>
       <filename>./logs/xpath.trace</filename>
@@ -246,10 +196,6 @@
 
   <aaa>
     <ssh-server-key-dir>${NCS_DIR}/etc/ncs/ssh</ssh-server-key-dir>
-
-    <!-- Depending on OS - and also depending on user requirements -->
-    <!-- the pam service value value must be tuned. -->
-
     <pam>
       <enabled>true</enabled>
       <service>common-auth</service>
@@ -258,23 +204,16 @@
       <enabled>false</enabled>
       <executable>my-test-auth.sh</executable>
     </external-authentication>
-
     <local-authentication>
       <enabled>true</enabled>
     </local-authentication>
-
   </aaa>
 
-  <!-- Hash algorithm used when setting leafs of type ianach:crypt-hash, -->
-  <!-- e.g. /aaa/authentication/users/user/password -->
   <crypt-hash>
     <algorithm>sha-512</algorithm>
   </crypt-hash>
 
-
 {% if nso_config_rollback is defined %}
-  <!-- Disable this for performance critical applications, enabling -->
-  <!-- rollbacks means additional disk IO for each transaction -->
   <rollback>
     <enabled>{{ nso_config_rollback.enabled | default('true') | bool | lower }}</enabled>
     <directory>{{ nso_config_rollback.directory | default('./logs') }}</directory>
@@ -287,20 +226,15 @@
   <cli>
     <enabled>{{ nso_config_cli.enabled | default('true') | bool | lower }}</enabled>
     <rollback-numbering>{{ nso_config_cli.rollback_numbering | default('fixed') }}</rollback-numbering>
-
-    <!-- Use the builtin SSH server -->
     <ssh>
       <enabled>{{ nso_config_cli.ssh.enabled | default('true') | bool | lower }}</enabled>
       <ip>{{ nso_config_cli.ssh.ip | default('0.0.0.0') }}</ip>
       <port>{{ nso_config_cli.ssh.port | default('2024') }}</port>
     </ssh>
-
     <prompt1>{{ nso_config_cli.prompt1 | default('\\u@ncs>') }} </prompt1>
     <prompt2>{{ nso_config_cli.prompt2 | default('\\u@ncs%') }} </prompt2>
-
     <c-prompt1>{{ nso_config_cli.cprompt1 | default('\\u@ncs#') }} </c-prompt1>
     <c-prompt2>{{ nso_config_cli.cprompt1 | default('\\u@ncs(\m)#') }} </c-prompt2>
-
     <show-commit-progress>{{ nso_config_cli.show_commit_progress | default('true') | bool | lower }}</show-commit-progress>
     <suppress-commit-message-context>{{ nso_config_cli.suppress_commit_message_context1 | default('maapi') }}</suppress-commit-message-context>
     <suppress-commit-message-context>{{ nso_config_cli.suppress_commit_message_context2 | default('system') }}</suppress-commit-message-context>
@@ -367,18 +301,5 @@
       </tcp>
     </transport>
   </netconf-call-home>
-
-  <!-- <ha> -->
-  <!--   <enabled>true</enabled> -->
-  <!-- </ha> -->
-
-  <large-scale>
-    <lsa>
-      <!-- Enable Layered Service Architecture, LSA. This requires
-           a separate Cisco Smart License.
-      -->
-      <enabled>false</enabled>
-    </lsa>
-  </large-scale>
 
 </ncs-config>

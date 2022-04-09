@@ -23,13 +23,20 @@
     fail_msg: "Whoops! Ant binary is not executable"
     quiet: true
 
-- name: pre-flight | Search for local NSO signed binary in 'files'
+- name: pre-flight | Search for NSO signed binary in 'files'
   find:
     paths: "{{ role_path }}/files"
     patterns: "{{ nso_file_pattern }}"
     use_regex: true
   register: nso_files_dir
   delegate_to: localhost
+
+- name: pre-flight | Assert that only one NSO binary is present in 'files'
+  assert:
+    that:
+      - nso_files_dir.files | length == 1
+    fail_msg: "Whoops! Looks like we have more than one NSO binary in 'files'"
+    quiet: true
 
 - name: pre-flight | Assign variable for NSO signed binary
   set_fact:

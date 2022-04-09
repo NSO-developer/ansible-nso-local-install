@@ -9,7 +9,7 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 * Create NSO runtime environment
   * Customize the runtime configuration
   * Automatically build and load NED's
-  * Create, customize, and load NSO NETSIM's
+  * Create and load NSO NETSIM's
   * Configure NSO CDB
 
 ### Restrictions
@@ -34,6 +34,7 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 ### Validated NSO Versions
 
 * 5.5
+* 5.7
 
 ## Role Variables
 
